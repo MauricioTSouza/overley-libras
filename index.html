@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vídeos Sincronizados</title>
+    <style>
+        .video-container {
+            position: relative;
+            width: 640px;
+            height: 360px;
+        }
+
+        .background-video {
+            width: 100%;
+            height: 100%;
+        }
+
+        .overlay-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none; /* Inicialmente oculto */
+        }
+
+        .button-container {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="video-container">
+    <!-- Vídeo de fundo -->
+    <video class="background-video" controls>
+        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        Seu navegador não suporta o elemento de vídeo.
+    </video>
+
+    <!-- Vídeo sobreposto -->
+    <video class="overlay-video" controls>
+        <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
+        Seu navegador não suporta o elemento de vídeo.
+    </video>
+</div>
+
+<div class="button-container">
+    <button onclick="toggleOverlayVideo()">Ativar/Desativar Intérprete de Libras</button>
+</div>
+
+<script>
+    const backgroundVideo = document.querySelector('.background-video');
+    const overlayVideo = document.querySelector('.overlay-video');
+
+    function toggleOverlayVideo() {
+        if (overlayVideo.style.display === 'none') {
+            overlayVideo.style.display = 'block';
+            overlayVideo.currentTime = backgroundVideo.currentTime; // Sincronizar o tempo
+            if (!backgroundVideo.paused) {
+                overlayVideo.play(); // Reproduzir o vídeo sobreposto se o vídeo principal já estiver tocando
+            }
+        } else {
+            overlayVideo.style.display = 'none';
+            overlayVideo.pause();
+        }
+    }
+
+    // Sincronizar a reprodução entre os vídeos
+    backgroundVideo.addEventListener('play', function() {
+        overlayVideo.currentTime = backgroundVideo.currentTime; // Sincronizar o tempo
+        overlayVideo.play(); // Reproduzir o vídeo sobreposto quando o vídeo principal começar
+    });
+
+    // Sincronizar a pausa entre os vídeos
+    backgroundVideo.addEventListener('pause', function() {
+        overlayVideo.pause(); // Pausar o vídeo sobreposto quando o vídeo principal for pausado
+    });
+
+    // Sincronizar a busca no tempo entre os vídeos
+    backgroundVideo.addEventListener('seeked', function() {
+        overlayVideo.currentTime = backgroundVideo.currentTime; // Ajustar o tempo do vídeo sobreposto quando o vídeo principal for adiantado ou atrasado
+    });
+</script>
+
+</body>
+</html>
